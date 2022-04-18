@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--Adrián Fernández Ortega-->
+<html lang="es">
+<head>
+    <style>
+        *
+        {
+          font-family: sans-serif;
+        }
+        div, p
+        {
+          background-color: aliceblue;
+        }
+        .correcto
+        {
+          color: green;
+          background-color: lightgreen;
+          font-style: bold;
+        }
+        .incorrecto
+        {
+          color: red;
+          background-color: salmon;
+          font-style: bold;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <title>Comprobador de DNI</title>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script>
+    $("document").ready(
+        function()
+        {
+            $("#texto").keyup(function(evento)
+            {
+                let texto = $(this).val();
+                let keycode = texto.charCodeAt(texto.length-1); //charCodeAt da el código ASCII correspondiente
+                if(keycode < 48 || keycode > 57)
+                {
+                    //no es un num, se borra
+                    let newText = texto.substring(0, texto.length-1);
+                    $("#texto").prop("value", newText);
+                }
+
+                if(texto.length == 8)
+                {
+                    $("#botonCalcular").prop('disabled', false);
+                }
+            })
+
+            $("#letra").keyup(function(evento)
+            {
+                $("#letra").val( $("#letra").val().toUpperCase());
+                let espacioLetra = $(this).val();
+                if($("#botonCalcular").prop('disabled') == false && espacioLetra.length > 0)
+                {
+                  $("#botonComprobar").prop("disabled", false);
+                }
+            });
+
+            $("#botonCalcular").click(function(evento)
+            {
+              var numeros = $("#texto").val();
+              if(isNaN(numeros))
+              {
+                numeros = parseInt(numeros);
+              }
+              let posicion = numeros%23;
+              var letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+              let letraCorrespondiente = letras[posicion];
+              $("#letra").val(letraCorrespondiente);
+              $("#botonComprobar").attr("disabled", false);
+            });
+
+            $("#botonComprobar").click(function(evento)
+            {
+              var numeros = $("#texto").val();
+              if(isNaN(numeros))
+              {
+                numeros = parseInt(numeros);
+              }
+              let posicion = numeros%23;
+              var letras = "TRWAGMYFPDXBNJZSQVHLCKE";
+              let letraCorrespondiente = letras[posicion];
+              if(letraCorrespondiente == $("#letra").val())
+              {
+                $("#letra").removeClass("incorrecto").addClass("correcto");
+              }
+              else
+              {
+                $("#letra").removeClass("correcto").addClass("incorrecto");
+              }
+            });
+        });
+      </script>
+
+</head>
+<body>
+    <div>
+
+         <h3>Letra Documento Indentidad</h3>
+
+        Número de Documento
+            <input  type="text" id="texto" placeholder="Número">
+            <input type="text" id="letra" placeholder="Letra" ng-model="letra" size="2">
+            <br>
+            <input  type="button" id="botonCalcular" disabled value="Calcular letra">
+            <input type="button" id="botonComprobar" disabled value="Comprobar letra">
+
+    </div>
+
+</body>
+
+</html>
